@@ -1,0 +1,305 @@
+<html lang="en" >
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Angular Material requires Angular.js Libraries -->
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-aria.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-messages.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-route.min.js"></script>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-resource.min.js"></script>
+
+  <!-- Angular Material Library -->
+  <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
+</head>
+<body ng-app="PeopleApp" ng-cloak>
+
+  <md-content>
+    <md-toolbar class="md-hue-2">
+      <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Settings" ng-disabled="true">
+          <md-icon md-svg-icon="/icons/ic_menu_white_24px.svg"></md-icon>
+        </md-button>
+        <h2>
+          <span>AppPeople</span>
+        </h2>
+        <span flex></span>
+        <md-button class="md-icon-button" aria-label="Favorite">
+          <md-icon md-svg-icon="/icons/ic_favorite_white_24px.svg"
+          style="color: greenyellow;"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="More">
+          <md-icon md-svg-icon="/icons/ic_more_vert_white_24px.svg"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <br>
+  </md-content>
+
+  <!--div layout="column" ng-cloak>
+  <section layout="row" flex>
+    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+      <md-toolbar class="md-theme-indigo">
+        <h1 class="md-toolbar-tools">Sidenav Left</h1>
+      </md-toolbar>
+      <md-content layout-padding ng-controller="LeftCtrl">
+        <md-button ng-click="close()" class="md-primary" hide-gt-md>
+          Close Sidenav Left
+        </md-button>
+        <p hide-md show-gt-md>
+          This sidenav is locked open on your device. To go back to the default behavior,
+          narrow your display.
+        </p>
+      </md-content>
+    </md-sidenav>
+  </section>
+  <md-content flex layout-padding>
+    <ng-view></ng-view>
+  </md-content>
+  </div -->
+
+  <div id="sideNavContainer" ng-controller="sideNavController as ctrl" layout="row" ng-cloak>
+         <md-sidenav md-component-id="left" class="md-sidenav-left">Welcome to TutorialsPoint.Com</md-sidenav>
+         <md-content>
+            <md-button ng-click="openLeftMenu()">Open Left Menu</md-button>
+      <md-button ng-click="openRightMenu()">Open Right Menu</md-button>
+         </md-content>
+         <md-sidenav md-component-id="right" class="md-sidenav-right">
+            <md-button href="http://google.com">Google</md-button>
+         </md-sidenav>
+      </div>
+
+  <md-content>
+    <div layout="row" layout-wrap>
+      <div flex="20" id="sideNavContainer" ng-controller="sideNavController as ctrl" layout="row" ng-cloak>
+        <md-menu-content width="2">
+          <md-menu-item ng-repeat="item in [1, 2, 3, 4, 5]">
+            <md-button>
+              <span md-menu-align-target>Option [[item]]</span>
+            </md-button>
+          </md-menu-item>
+        </md-menu-content>
+      </div>
+      <div flex="80">
+        <ng-view>
+
+        </ng-view>
+      </div>
+    </div>
+  </md-content>
+
+
+  <!-- Template -->
+  <script type="text/ng-template" id="/peoples.html">
+    <md-input-container flex>
+      <label>Search</label>
+      <input ng-model="search.name">
+    </md-input-container>
+    <md-content>
+      <md-list flex>
+        <md-subheader class="md-no-sticky">List of peoples</md-subheader>
+        <md-list-item class="md-2-line" ng-repeat="people in peoples | filter: search">
+          <a href="#/peoples/[[people._id]]/edit">
+            <div class="md-list-item-text">
+              <h3>[[ people.name ]]</h3>
+              <p>[[ people.email ]]</p>
+            </div>
+          </a>
+        </md-list-item>
+        <md-divider ></md-divider>
+      </md-list>
+    </md-content>
+  </script>
+
+  <script type="text/ng-template" id="/peopleDetails.html">
+    <md-content layout-padding>
+      <div>
+        <form name="EditUserForm">
+          <div layout="row">
+            <md-input-container flex>
+              <label>Name</label>
+              <input ng-model="people.name">
+            </md-input-container>
+          </div>
+          <div layout="row">
+            <md-checkbox ng-model="people.active" aria-label="Active">
+              Active: [[people.active]]
+            </md-checkbox>
+          </div>
+          <div layout="row">
+            <md-input-container flex>
+              <label>Email</label>
+              <input ng-model="people.email">
+            </md-input-container>
+          </div>
+          <md-input-container class="md-block">
+            <label>Biography</label>
+            <textarea ng-model="people.bio" md-maxlength="150" rows="5" md-select-on-focus></textarea>
+          </md-input-container>
+
+          <md-button class="md-raised md-warn" ng-click="remove()">Delete</md-button>
+          <md-button class="md-raised md-primary" ng-click="save()">Save</md-button>
+
+
+        </form>
+      </div>
+    </md-content>
+  </script>
+
+  <script type="text/ng-template" id="/newPeople.html">
+    <md-content layout-padding>
+      <div>
+        <form name="NewUserForm">
+          <div layout="row">
+            <md-input-container flex>
+              <label>Name</label>
+              <input ng-model="people.name">
+            </md-input-container>
+          </div>
+          <div layout="row">
+            <md-checkbox ng-model="people.active" aria-label="Active">
+              Active: [[people.active]]
+            </md-checkbox>
+          </div>
+          <div layout="row">
+            <md-input-container flex>
+              <label>Email</label>
+              <input ng-model="people.email">
+            </md-input-container>
+          </div>
+          <md-input-container class="md-block">
+            <label>Biography</label>
+            <textarea ng-model="people.bio" md-maxlength="150" rows="5" md-select-on-focus></textarea>
+          </md-input-container>
+          <md-button class="md-raised" ng-click="cancel()">Cancel</md-button>
+          <md-button class="md-raised md-primary" ng-click="save()">Save</md-button>
+        </form>
+      </div>
+    </md-content>
+  </script>
+
+  <!-- Your application bootstrap  -->
+  <script type="text/javascript">
+
+    /**
+     * You must include the dependency on 'ngMaterial'
+     */
+
+    var app = angular.module('PeopleApp',
+      ['ngMaterial', 'ngRoute', 'ngResource']);
+
+    //---------------
+    // Services
+    //---------------
+
+    app.factory('People', ['$resource', function($resource){
+      return $resource('/peoples/:id', {id: '@_id'}, {
+        'update': { method: 'PUT'},
+        'save':   {method:'POST'},
+      });
+    }]);
+
+    //---------------
+    // Controllers
+    //---------------
+
+    app.controller('sideNavController',['$scope', '$mdSidenav',
+      function($scope, $mdSidenav) {
+
+        $scope.openLeftMenu = function(){
+          $mdSidenav('left').toggle();
+        };
+
+        // $scope.openRightMenu = function() {
+        //   $mdSidenav('right').toggle();
+        // };
+      }]);
+
+    app.controller('PeopleController',
+      ['$scope','$log', 'People','$location',
+        function ($scope, $log, People, $location){
+        $scope.peoples = People.query();
+      }]);
+
+    app.controller('PeopleDetailCtrl', ['$scope', '$routeParams', '$location',
+      'People', function ($scope, $routeParams,$location , People) {
+      $scope.people = People.get({id: $routeParams.id});
+      $scope.update = function(){
+        People.update(
+          {id: $scope.people._id},
+          {
+            name: $scope.people.name,
+            bio: $scope.people.bio,
+            email: $scope.people.email,
+            active: $scope.people.active,
+          },
+          function(){ $location.url('/');}
+        );
+      }
+
+      $scope.remove = function(){
+        People.remove({id: $scope.people._id}, function(){
+          $location.url('/');
+        });
+      }
+
+    }]);
+
+    app.controller('PeopleNewCtrl', ['$scope', '$routeParams','$location',
+      'People', function ($scope, $routeParams, $location, People) {
+      $scope.people = {};
+      $scope.save = function(){
+        //if(!$scope.people || $scope.people.length < 1) return;
+
+        var people2 = new People({
+          name: $scope.people.name,
+          bio: $scope.people.bio,
+          email: $scope.people.email,
+          active: $scope.people.active,
+        });
+
+        people2.$save(function(){ $location.url('/'); });
+      }
+
+      $scope.cancel = function(){ $location.url('/');}
+    }]);
+
+    //-----------
+    // Provider
+    //----------
+    app.config(function($interpolateProvider) {
+      $interpolateProvider.startSymbol('[[');
+      $interpolateProvider.endSymbol(']]');
+    });
+
+    //---------------
+    // Routes
+    //---------------
+
+    app.config(['$routeProvider', function ($routeProvider) {
+      $routeProvider
+        .when('/peoples', {
+          templateUrl: '/peoples.html',
+          controller: 'PeopleController'
+        })
+        .when('/peoples/:id/edit', {
+          templateUrl: '/peopleDetails.html',
+          controller: 'PeopleDetailCtrl'
+       })
+        .when('/peoples/new', {
+          templateUrl: '/newPeople.html',
+          controller: 'PeopleNewCtrl'
+       })
+        .otherwise({redirectTo:'/peoples'});
+    }]);
+
+  </script>
+
+</body>
+</html>
