@@ -45,6 +45,8 @@
              </td>
           </tr>
          </tbody>
+         <tfoot id='t_foot'>
+         </tfoot>
       </table>
     </div>
     <div class='col-md-6'>
@@ -198,7 +200,7 @@
 
       $('#h_table').html(
         "<tr ><th>Linha</th>" +
-        "<th>Denominacao</th></tr>");
+        "<th>Denominação</th></tr>");
 
       $('#b_table').html(
         "<tr><th colspan='2'><center>"+
@@ -229,8 +231,9 @@
     function busca_bus_linha(termo){
 
       $('#h_table').html(
-        "<tr><th>Veiculo</th>" +
-        "<th>Denominacao</th></tr>");
+        "<tr><th>Veículo</th>" +
+        "<th>Linha</th>"+
+        "<th>Hora</th></tr>");
 
       $('#b_table').html(
         "<tr><th colspan='2'><center>"+
@@ -253,7 +256,8 @@
             $("#b_table").append(
               "<tr class='veiculo'><td>" +
               value.CodigoVeiculo + "</td>"+
-              "<td>"+ data.Linha.Denomicao + "</td></tr>"
+              "<td>"+ data.Linha.Denomicao + "</td>"+
+              "<td>"+ value.Hora +"</td></tr>"
             );
             neighborhoods.push({
               lat: parseFloat(value.Lat),
