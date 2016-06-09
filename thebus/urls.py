@@ -18,6 +18,11 @@ from django.contrib import admin
 from core import views
 
 urlpatterns = [
+    url(r'auth/', views.auth, name='auth'),
+    url(r'bus_line/', views.bus_by_line, name='bus_by_line'),
+    url(r'all_bus/', views.all_bus, name='all_bus'),
+    url(r'bus_stop/', views.bus_stop, name='bus_stop'),
+    url(r'lines/', views.lines, name='lines'),
     url(r'^$', views.home, name='home'),
     url(r'^admin/', admin.site.urls),
 ]
