@@ -285,13 +285,13 @@
       }
     });
 
-    $("#b_table").on("click", "tr.veiculo", function (e) {
+    $("#b_table").on("click", ".veiculo", function (e) {
       row = $(this).closest("tr");
       cel = row.find("td:nth-child(1)").text();
       console.log(cel);
     });
 
-    $("#b_table").on("click", "tr.linha", function (e) {
+    $("#b_table").on("click", ".linha", function (e) {
       row = $(this).closest("tr");
       cel = row.find("td:nth-child(1)").text();
       console.log(cel);
