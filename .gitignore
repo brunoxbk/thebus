@@ -4,3 +4,4 @@ staticfiles
 *.pyc
 .env
 development.py
+db.sqlite3
