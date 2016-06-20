@@ -5,11 +5,12 @@ import json
 import time
 from datetime import datetime, timedelta
 from django.core.cache import cache
+from django.db.models import Q
+from core.models import Line
+from django.conf import settings
+
 
 URL = 'https://api.inthegra.strans.teresina.pi.gov.br/v1/'
-
-# datetime.strptime(string, "%d-%m-%Y %H:%M:%S")
-# now.strftime("%d-%m-%Y")
 
 
 def check_token():
@@ -20,14 +21,14 @@ def check_token():
     """
     url = URL + 'signin'
 
-    dados = {"email": "brunoxbk@gmail.com", "password": "88441608"}
+    dados = {"email": settings.EMAIL, "password": settings.PASS}
 
     headers = {
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
         'Accept-Language': "en",
         'Date': time.strftime('%a, %d %b %Y %H:%M:%S GMT'),
-        'X-Api-Key': 'ade1e4f2830f431ba776457ecb17b27f',
+        'X-Api-Key': settings.API_STRANS,
     }
 
     vality = cache.get('vality', None)
@@ -40,13 +41,10 @@ def check_token():
         resp = json.loads(r.text)
         dt = datetime.now() + timedelta(minutes=9)
         cache.set_many({'vality': dt, 'token': resp['token']})
-    else:
-        print('token válido')
-        pass
 
 
 def home(request):
-    return render(request, 'teste.html', {})
+    return render(request, 'home.html', {})
 
 
 def auth(request):
@@ -100,6 +98,8 @@ def bus_by_line(request):
 def all_bus(request):
     url = URL + 'veiculos'
 
+    check_token()
+
     headers = {
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
@@ -138,5 +138,67 @@ def lines(request):
 
 
 def bus_stop(request):
-    pass
+    url = URL + 'paradas'
 
+    check_token()
+
+    headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+        'Accept-Language': "en",
+        'Date': time.strftime('%a, %d %b %Y %H:%M:%S GMT'),
+        'X-Api-Key': 'ade1e4f2830f431ba776457ecb17b27f',
+        'X-Auth-Token': cache.get('token')
+    }
+
+    param = {'busca': request.GET.get('busca', '')}
+
+    r = requests.get(url, headers=headers, params=param)
+    mimetype = "application/json;charset=UTF-8"
+    return HttpResponse(r.text, mimetype)
+
+
+def stop_by_line(request):
+    """
+        { buscando onibus as vezes da isso
+        "code": 130,
+        "message": "Item not found"}
+    """
+
+    check_token()
+
+    url = URL + 'paradasLinha'
+
+    headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+        'Accept-Language': "en",
+        'Date': time.strftime('%a, %d %b %Y %H:%M:%S GMT'),
+        'X-Api-Key': 'ade1e4f2830f431ba776457ecb17b27f',
+        'X-Auth-Token': cache.get('token')
+    }
+
+    param = {'busca': request.GET.get('busca', '')}
+
+    r = requests.get(url, headers=headers, params=param)
+    mimetype = "application/json;charset=UTF-8"
+    return HttpResponse(r.text, mimetype)
+
+
+def autocomplete(request):
+    query = Q()
+
+    if request.GET.get('term', False):
+        query = Q(denomination__icontains=request.GET['term']) | \
+            Q(code_line__icontains=request.GET['term'])
+
+    lines = Line.objects.filter(query)
+
+    lines_parsed = []
+    for l in lines:
+        lines_parsed.append({
+            'id': l.code_line, 'name': "%s" % l.__str__()})
+
+    data = json.dumps(lines_parsed, ensure_ascii=False).encode('utf8')
+    mimetype = "application/json;charset=UTF-8"
+    return HttpResponse(data, mimetype)

@@ -118,6 +118,11 @@ TIME_ZONE = 'America/Fortaleza'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
+API_STRANS = "ade1e4f2830f431ba776457ecb17b27f"
+EMAIL = "brunoxbk@gmail.com"
+PASS = "88441608"
+
 try:
     from .development import *
     STATIC_URL = '/static/'
